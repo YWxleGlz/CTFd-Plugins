@@ -1,0 +1,42 @@
+{# Based on https://github.com/Isotech42/CTFd-RedHerring/blob/main/templates/red_herring.html #}
+
+{% extends "admin/base.html" %} {% block stylesheets %} {% endblock %}
+
+{% block content %}
+	<div class="jumbotron">
+		<div class="container">
+			<h1>Cheat monitor</h1>
+		</div>
+	</div>
+    <div class="container">
+        <div id="cheat" class="row">
+            <div class="col-md-12">
+                <p>Make sure that the flags have enough entropy to know whether there has just been a typo or a real case of cheating.</p>
+                <table class="table table-striped">
+                    <thead class="text-center">
+                        <tr>
+                            <td scope="col" width="10px"><b>ID</b></td>
+                            <td scope="col"><b>Challenge</b></td>
+                            <td scope="col"><b>Cheater</b></td>
+                            <td scope="col"><b>Cheating team</b></td>
+                            <td scope="col"><b>Sharing team</b></td>
+                            <td scope="col"><b>Date</b></td>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center">
+                    {% for cheater in cheaters %}
+                        <tr>
+                            <th scope="row">{{ loop.index }}</th>
+                            <td><a href="{{ url_for('admin.challenges_detail', challenge_id = cheater.challengeid )}}">{{ cheater.challenge_name() }}</a></td>
+                            <td><a href="{{ url_for('admin.users_detail', user_id = cheater.cheaterid )}}">{{cheater.cheater_name()}}</a></td>
+                            <td><a href="{{ url_for('admin.teams_detail', team_id = cheater.cheatteamid )}}">{{ cheater.cheated_team_name() }}</a></td>
+                            <td><a href="{{ url_for('admin.teams_detail', team_id = cheater.sharerteamid )}}">{{ cheater.shared_team_name() }}</a></td>
+                            <td>{{ cheater.date }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

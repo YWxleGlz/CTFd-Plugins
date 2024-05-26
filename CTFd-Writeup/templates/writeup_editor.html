@@ -1,0 +1,34 @@
+{% extends "admin/base.html" %} {% block stylesheets %} {% endblock %} {% block
+content %}
+<style>
+  .body {
+    margin-top: 3vh;
+  }
+</style>
+<div class="container body">
+  <form method="POST">
+    <h2>
+      Writeup Edition : {{ challenge_info.name}} {% if challenge_info.category
+      != "" %} ({{ challenge_info.category }}) {% endif %}
+    </h2>
+    <div id="writeup-editor">
+      <textarea
+        id="new-desc-editor"
+        class="form-control markdown"
+        name="description"
+        rows="10"
+      >
+{{ writeup.content }}</textarea
+      >
+    </div>
+
+    <div>
+      <button class="btn btn-success btn-outlined float-right" type="submit">
+        Update
+      </button>
+    </div>
+    <input type="hidden" value="{{ Session.nonce }}" name="nonce" id="nonce" />
+  </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>Writeup : {{ content[0].name }}</h1>
+    <h2>{{ content[0].category }}</h2>
+  </div>
+</div>
+
+<div class="container">
+  {% if content[0].description %}
+  <h2>Description:</h2>
+  <p>{{ content[0].description | markdown | safe }}</p>
+  {% endif %} 
+  
+  <hr />
+  
+  {% if content[1].content and content[1].visible %}
+  
+  <h2>Solution :</h2>
+  <p>{{ content[1].content | markdown | safe }}</p>
+  {% else %}
+  <h2>Solution :</h2>
+  <p>No solution currently available</p>
+  {% endif %}
+</div>
+
+{% endblock%}

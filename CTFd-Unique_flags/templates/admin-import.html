@@ -1,0 +1,101 @@
+{% extends "admin/base.html" %} 
+
+{% block stylesheets %}
+{#
+
+Réutilisation du components/errors.html sauf qu'il manque bootstrap sur le page admin pour 
+que le components soit interactif, donc la possibilité de supprimer l'alerte est retirée  
+
+#}
+<style>
+  .btn-close{
+    display: none;
+  }
+</style>
+{% endblock %} 
+
+
+
+{% block
+content %}
+<style>
+  .body {
+    margin-top: 3vh;
+  }
+</style>
+<div class="container body">
+  {% include "components/errors.html" %}
+
+  <h2>Unique Flags Import</h2>
+  <p>
+
+    {{enabled}}
+    Please encode your flags in CSV format as in the example file
+    <a href="/plugins/unique_flags/assets/example.csv">flags.csv</a>
+  </p>
+  <form method="POST">
+    <div id="writeup-editor">
+      <textarea id="new-desc-editor" class="form-control" rows="10" name="content"></textarea>
+    </div>
+
+    <div class="mt-1">
+      <input type="file" id="csv" name="csv" accept=".csv">
+      <button class="btn btn-success btn-outlined float-right " type="submit">
+        Insert flags
+      </button>
+    </div>
+    <input type="hidden" value="{{ Session.nonce }}" name="nonce" id="nonce" />
+  </form>
+<br>
+  <div>
+    <hr>
+    <h2>Plugin configuration</h2>
+    <br>
+    <h4>Resetting flags</h4>
+    <p>This function will delete all flags, but will not reset any resolutions already made. </p>
+    <form method="POST" action="{{ url_for('unique_flags.delete_flags')}}">
+        <button class="btn btn-danger btn-outlined float-left" type="submit">
+          Delete all unique flags
+        </button>
+      <input type="hidden" value="{{ Session.nonce }}" name="nonce" id="nonce" />
+    </form>
+
+    <br>
+    </div>
+    <div class="mt-5">
+    <h4>Delete a series of flags</h4>
+    <p>This function will remove all flags linked to a challenge.</p>
+    
+    <form method="POST" action="{{ url_for('unique_flags.delete_flags')}}">
+      <label for="challenge_id">Challenge</label>
+      <select class="form-control w-50" name="challenge_id">
+        {% for challenge in challenges %}
+          <option value="{{ challenge.id }}">{{ challenge.name }} ({{ challenge.category }})</option>
+        {% endfor %}
+      </select>
+        <button class="btn btn-danger btn-outlined mt-3 mb-3" type="submit">
+          Delete all unique flags for a challenge
+        </button>
+      <input type="hidden" value="{{ Session.nonce }}" name="nonce" id="nonce" />
+    </form>
+  </div>
+</div>
+
+
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+  function handleFileSelect(evt) {
+    var file = evt.target.files[0];
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      document.getElementById('new-desc-editor').value = e.target.result;
+    };
+    reader.readAsText(file);
+  }
+
+  document.getElementById('csv').addEventListener('change', handleFileSelect, false);
+</script>
+{% endblock %} 

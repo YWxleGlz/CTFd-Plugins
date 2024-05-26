@@ -1,0 +1,11 @@
+[
+  {
+    "name": "Unique flag administration",
+    "route": "/admin/unique-flag"
+  },
+
+  {
+    "name": "Cheating monitor",
+    "route": "/admin/unique-flag/cheating-monitor"
+  }
+]
