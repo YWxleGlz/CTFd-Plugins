@@ -77,7 +77,14 @@ cp CTFd-<Uniques_flags|Universal_flag_submitter|Writeup> plugins/ -r
 ```bash
 docker compose build
 ```
-3. Start the stack
+
+3. Configure secret in .env
+```bash
+cp .env.example .env
+```
+Edit the file to insert secret. A python command for generating strong secret is also in the `.env` file.
+
+4. Start the stack
 ```bash
 docker compose up -d
 ```
