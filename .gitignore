@@ -1,4 +1,4 @@
-.data
+.env
+data/*
 plugins/*
 !plugins/.gitkeep
-

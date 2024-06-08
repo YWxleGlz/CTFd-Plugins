@@ -6,16 +6,17 @@ services:
     restart: always
     environment:
       - UPLOAD_FOLDER=/var/uploads
-      - DATABASE_URL=mysql+pymysql://ctfd:ctfd@db/ctfd
+      - DATABASE_URL=mysql+pymysql://ctfd:${MARIADB_PASSWORD}@db/ctfd
       - REDIS_URL=redis://cache:6379
       - WORKERS=1
       - LOG_FOLDER=/var/log/CTFd
       - ACCESS_LOG=-
       - ERROR_LOG=-
       - REVERSE_PROXY=true
+      - SECRET_KEY=${SECRET_KEY}
     volumes:
-      - .data/CTFd/logs:/var/log/CTFd
-      - .data/CTFd/uploads:/var/uploads
+      - ./data/CTFd/logs:/var/log/CTFd
+      - ./data/CTFd/uploads:/var/uploads
     depends_on:
       - db
     networks:
@@ -36,13 +37,13 @@ services:
     image: mariadb:10.11
     restart: always
     environment:
-      - MARIADB_ROOT_PASSWORD=ctfd
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
       - MARIADB_USER=ctfd
-      - MARIADB_PASSWORD=ctfd
+      - MARIADB_PASSWORD=${MARIADB_PASSWORD}
       - MARIADB_DATABASE=ctfd
       - MARIADB_AUTO_UPGRADE=1
     volumes:
-      - .data/mysql:/var/lib/mysql
+      - ./data/mysql:/var/lib/mysql
     networks:
         internal:
     # This command is required to set important mariadb defaults
@@ -52,7 +53,7 @@ services:
     image: redis:4
     restart: always
     volumes:
-    - .data/redis:/data
+    - ./data/redis:/data
     networks:
         internal:
 
