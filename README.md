@@ -75,7 +75,7 @@ Please read the readme file in each folder for specific installation information
 <!-- TOC --><a name="support"></a>
 ## Support
 
-For questions, support regarding plugins, please open an issue. If you wish to report a security vulnerability, please follow the [security.md](security.md) guidelines.
+For questions, support regarding plugins, please open an issue. If you wish to report a security vulnerability, please follow the [security.md](SECURITY.md) guidelines.
 
 <!-- TOC --><a name="credits"></a>
 ## Credits
