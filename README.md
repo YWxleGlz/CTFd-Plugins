@@ -37,7 +37,7 @@ This plugin allows you to validate a single flag per team, and you can also impo
 <!-- TOC --><a name="plugin-2-universal-flag-submitter"></a>
 
 ## Plugin 2 : Universal flag submitter
-This plugins will overwrite the default challenge template, and add a way to submit flag trough one forms. This plugin is made for blackbox. An administrator interface is provided to hide challenges from the default interface. Please note that this plugin is not compatible with the requirements and next functions. You need to use Team name generated from the following script `group-csv-generator.py` 
+This plugins will overwrite the default challenge template, and add a way to submit flag trough one forms. This plugin is made for blackbox. An administrator interface is provided to hide challenges from the default interface. Please note that this plugin is not compatible with the requirements and next functions. You need to use Team name generated from the following script `team-generator.py` 
 
 <details>
   <summary>Screenshots</summary>
@@ -78,7 +78,9 @@ cp CTFd-<Uniques_flags|Universal_flag_submitter|Writeup> plugins/ -r
 docker compose build
 ```
 3. Start the stack
-
+```bash
+docker compose up -d
+```
 
 Please read the readme file in each folder for specific installation information. Especially for plugins (Universal flag submitter & Unique flag)
 
@@ -91,6 +93,31 @@ To update CTFd, change the version number modify the Dockerfile
 ## Support
 
 For questions, support regarding plugins, please open an issue. If you wish to report a security vulnerability, please follow the [security.md](SECURITY.md) guidelines.
+
+## FAQ 
+
+### Where is my data ?
+
+All your data is saved in the `data` folder. 
+The data folder use the following structure. If you want to update a plugin, don't forget to rebuild the docker image and delete the redis folder.
+
+```bash
+data
+├── CTFd
+│   ├── logs
+│   └── uploads
+├── mysql
+│   ├── ctfd
+│   ├── mysql
+│   ├── performance_schema
+│   └── sys
+└── redis
+```
+
+### Is it possible to reset CTFd ?
+
+Yes, you can do this from the administrator interface. However, as it is possible to import challenges, teams and flags, we strongly advise you to archive the data folder and create a new, empty data folder before starting a new installation.
+
 
 <!-- TOC --><a name="credits"></a>
 ## Credits
