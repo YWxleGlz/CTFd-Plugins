@@ -12,6 +12,7 @@ This repository contains three CTFd plugins, the first allowing unique flags to 
 - [Plugin 2 : Universal flag submitter](#plugin-2-universal-flag-submitter)
 - [Plugin 3 : Writeup](#plugin-3-writeup)
 - [Installation](#installation)
+- [Update](#update)
 - [Support](#support)
 - [Credits](#credits)
 
@@ -68,9 +69,23 @@ The administrator has an interface for adding comments to the database. Text can
 ## Installation
 
 1. Copy the desired plugin folder to your CTFd plugins folder
-2. Restart CTFd
+
+```bash
+cp CTFd-<Uniques_flags|Universal_flag_submitter|Writeup> plugins/ -r
+```
+2. Build the docker image
+```bash
+docker compose build
+```
+3. Start the stack
+
 
 Please read the readme file in each folder for specific installation information. Especially for plugins (Universal flag submitter & Unique flag)
+
+<!-- TOC --><a name="update"></a>
+## Update
+
+To update CTFd, change the version number modify the Dockerfile
 
 <!-- TOC --><a name="support"></a>
 ## Support
