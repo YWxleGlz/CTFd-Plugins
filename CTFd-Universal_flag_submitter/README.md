@@ -11,3 +11,8 @@ This plugin lets you create blackbox challenges.
 Done, you can start the CTF
 
 Warning this plugin is not compatible with native requirements & next functions 
+
+
+## Limitation
+
+- This plugin only works in team mode
