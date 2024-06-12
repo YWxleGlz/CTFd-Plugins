@@ -13,5 +13,5 @@ Done.
 It is possible to deactivate the plugin, but the CTFd server must be restarted for the changes to take effect.
 
 # Known issues / Possible improvements
-- In the writeup editing form, the ability to add images is missing (there's a js error).
-- Don't reload the page, but rather interact with the API, which would return JSON.
+- Issues - In the writeup editing form, the ability to add images is missing (there's a js error). (Issue [#2545](https://github.com/CTFd/CTFd/issues/2545))
+- Improvement - Don't reload the page, but rather interact with the API, which would return JSON.
