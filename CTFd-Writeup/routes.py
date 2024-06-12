@@ -3,16 +3,18 @@ from flask import render_template, Blueprint, request, redirect, url_for, sessio
 from CTFd.models import Solves, Challenges, db
 from CTFd.utils.decorators import admins_only
 from .models import WriteupModel
-from CTFd.utils.user import  get_current_user_attrs
+from CTFd.utils.user import  get_current_team, get_current_user_attrs
 from CTFd.utils.helpers import get_errors, get_infos
 from CTFd.utils.helpers import info_for, error_for
 from .decorators import plugin_enabled
 from CTFd.utils import config, get_config, set_config
+from CTFd.utils.decorators import authed_only
 
 plugin_blueprint = Blueprint('writeup', __name__, template_folder='templates')
 
 @plugin_blueprint.route("/writeup/<int:challenge_id>", methods=["GET"])
 @plugin_enabled
+@authed_only
 def view_writeup(challenge_id):
     if challenge_is_unlocked(challenge_id):
         return render_template('custom-page.html', content=get_writeup(challenge_id))
@@ -120,7 +122,12 @@ def toogle_writeup_visibility(challenge_id):
 
 def challenge_is_unlocked(challenge_id):
     user = get_current_user_attrs()
-    return db.session.query(Solves).filter(Solves.team_id == user.team_id, Solves.challenge_id == challenge_id).count()
+    team = get_current_team()
+
+    if config.is_teams_mode() and team is not None:
+        return db.session.query(Solves).filter(Solves.team_id == user.team_id, Solves.challenge_id == challenge_id).count()
+    else:
+        return db.session.query(Solves).filter(Solves.user_id == user.id, Solves.challenge_id == challenge_id).count()
 
 def get_writeup(challenge_id):
     return db.session.query(Challenges, WriteupModel).outerjoin(WriteupModel, Challenges.id == WriteupModel.id).filter(Challenges.id == challenge_id, Challenges.state == "visible").first()
