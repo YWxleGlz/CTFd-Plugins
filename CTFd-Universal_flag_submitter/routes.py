@@ -1,6 +1,3 @@
-
-import os
-
 import sqlalchemy
 
 from CTFd.cache import clear_challenges
@@ -12,7 +9,7 @@ from CTFd.models import (
 import copy
 from flask import Blueprint, redirect, render_template, request, url_for
 from CTFd.plugins.challenges import get_chal_class
-from CTFd.utils.decorators import admins_only
+from CTFd.utils.decorators import admins_only, authed_only, during_ctf_time_only, require_complete_profile, require_verified_emails
 from CTFd.utils.helpers import error_for, get_errors, get_infos, info_for
 from CTFd.utils.user import get_current_user
 from .decorators import is_allowed_to_attempt
@@ -24,9 +21,17 @@ plugin_blueprint = Blueprint("universal_flag_submitter", __name__, template_fold
 
 @plugin_blueprint.route("/attempt-hidden-challenge", methods=["POST"])
 @is_allowed_to_attempt
+@authed_only
+@require_complete_profile
+@during_ctf_time_only
+@require_verified_emails
 def attempt_hidden_challenge():
 
     chall = db.session.query(Challenges).filter(Challenges.state == "visible").all()
+
+    if len(chall) == 0:
+        return {"success": False, "message": "No challenges found. Ask administrator to check configuration.", "design": "neutral"}
+    
     for challenge in chall:
         chal_class = get_chal_class(challenge.type)
         status, message = chal_class.attempt(challenge, request)
@@ -61,7 +66,7 @@ def home():
         challenges_view = []
         for challenge in Challenges.query.filter_by(state="visible").all():
 
-            checked = bool(
+            checked = (
                 challenge.requirements is not None
                 and "prerequisites" in challenge.requirements
                 and challenge.id in challenge.requirements["prerequisites"]
@@ -91,10 +96,10 @@ def home():
         for challenge in request.form.getlist("challenges"):
             challenge = Challenges.query.filter_by(id=challenge).first()
             requirements = {"prerequisites" : [int(challenge.id)]}
-            
+
             challenge.requirements = copy.deepcopy(requirements)
             db.session.commit()
-        
+
         clear_challenges()
         info_for("universal_flag_submitter.home", "Saved changes")
 
