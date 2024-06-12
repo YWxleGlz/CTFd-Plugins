@@ -42,7 +42,7 @@
             <a
               class="nav-link challenge-solves"
               data-bs-target="#solutions"
-              href="/writeup/{{ challenge.id }}"
+              href="{{ url_for('writeup.view_writeup', challenge_id = challenge.id) }}"
             >
               Solution
             </a>

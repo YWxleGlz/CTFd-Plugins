@@ -79,7 +79,7 @@ que le components soit interactif, donc la possibilité de supprimer l'alerte es
             {% endif %}
             <td>
               <a 
-                href="writeup/edit/{{ challenge.id }}"
+                href="{{url_for('writeup.edit_writeup', challenge_id=challenge.id)}}"
                 class="btn btn-outline-secondary"
                 data-toggle="tooltip"
                 title=""
