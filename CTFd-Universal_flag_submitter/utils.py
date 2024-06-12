@@ -17,11 +17,13 @@ def add_submission(submission_type, challenge_id, request):
 
     # Récupérer l'utilisateur
     user = get_current_user()
+
+    team = user.team.id if user.team else None
     # Créer l'objet de soumission en fonction du type
     submission_class = Fails if submission_type == 'fail' else Solves
     submission = submission_class(
         user_id=user.id,
-        team_id=user.team.id,
+        team_id=team,
         challenge_id=challenge_id,
         ip=request.remote_addr,
         provided=f"UNIVERSAL-{request.json['submission']}"
