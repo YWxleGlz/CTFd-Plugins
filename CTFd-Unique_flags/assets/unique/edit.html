@@ -1,5 +1,5 @@
 <label>
-  Static<br />
+  Unique flag<br />
   <small>Enter static flag data</small>
 </label>
 <div class="form-group">
@@ -9,14 +9,6 @@
     name="content"
     value="{{ content }}"
   />
-</div>
-<div class="form-group">
-  <select class="form-control custom-select col-md-6" name="data">
-    <option value="">Case Sensitive</option>
-    <option value="case_insensitive" {% if data %}selected{% endif %}>
-      Case Insensitive
-    </option>
-  </select>
 </div>
 <small>Team ID (int)</small>
 <input type="number" class="form-control required" name="data"  value="{{ data }}"/>
