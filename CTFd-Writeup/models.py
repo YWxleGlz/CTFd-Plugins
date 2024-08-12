@@ -4,6 +4,9 @@ from sqlalchemy import Integer, Text, Boolean, Column, ForeignKey
 
 
 class WriteupModel(db.Model):
+    """
+    Model for the writeups table
+    """
     __tablename__ = "writeups"
     id = Column(Integer, ForeignKey('challenges.id', ondelete="CASCADE"), primary_key=True)
     content = Column(Text)

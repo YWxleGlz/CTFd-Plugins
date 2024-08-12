@@ -4,9 +4,7 @@ from flask import abort
 
 def plugin_enabled(f):
     """
-    Decorator that requires the plugin enabled
-    :param f:
-    :return:
+    Decorator to prevent access to a route if the plugin is disabled
     """
     @functools.wraps(f)
     def plugin_enabled_wrapper(*args, **kwargs):

@@ -6,7 +6,8 @@ GROUPS = ["A", "B", "C"]
 TEAMS_PER_GROUP = 12
 
 def random_string(length=6):
-    """Generate a random password of lowercase letters.
+    """
+    Generate a random password of lowercase letters.
 
     Args:
         length (int, optional): The length of the random string. Defaults to 6.

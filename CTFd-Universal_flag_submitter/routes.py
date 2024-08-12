@@ -25,8 +25,14 @@ plugin_blueprint = Blueprint("universal_flag_submitter", __name__, template_fold
 @require_complete_profile
 @during_ctf_time_only
 @require_verified_emails
+#@require_team
 def attempt_hidden_challenge():
+    """ 
+    Attempt to solve a hidden challenge
 
+    Returns:
+        dict: A dictionary containing the success status, message, and design
+    """
     chall = db.session.query(Challenges).filter(Challenges.state == "visible").all()
 
     if len(chall) == 0:
@@ -59,7 +65,10 @@ def attempt_hidden_challenge():
 @plugin_blueprint.route("/admin/hide-challenge", methods=["GET", "POST"])
 @admins_only
 def home():
-
+    """
+    Hide challenges from the challenge list and show hidden challenges administration page
+    """
+    
     if request.method == "GET":
         infos = get_infos()
         errors = get_errors()

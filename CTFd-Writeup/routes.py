@@ -16,6 +16,9 @@ plugin_blueprint = Blueprint('writeup', __name__, template_folder='templates')
 @plugin_enabled
 @authed_only
 def view_writeup(challenge_id):
+    """
+    View the writeup for a challenge if it is unlocked
+    """
     if challenge_is_unlocked(challenge_id):
         return render_template('custom-page.html', content=get_writeup(challenge_id))
     else:
@@ -24,6 +27,9 @@ def view_writeup(challenge_id):
 @plugin_blueprint.route("/admin/writeup", methods=["GET"])
 @admins_only
 def view_admin_writeup():
+    """
+    View the writeup for a challenge
+    """
     infos = get_infos()
     errors = get_errors()
 
@@ -35,6 +41,9 @@ def view_admin_writeup():
 @plugin_blueprint.route("/admin/writeup", methods=["POST"])
 @admins_only
 def admin_update_config():
+    """
+    Update the plugin configuration and display the writeup configuration page
+    """
     infos = get_infos()
     errors = get_errors()
 
@@ -51,6 +60,15 @@ def admin_update_config():
 @plugin_blueprint.route("/admin/writeup/edit/<int:challenge_id>", methods=["GET", "POST"])
 @admins_only
 def edit_writeup(challenge_id):
+    """
+    Edit the writeup for a challenge
+
+    Args:
+        challenge_id (int): The challenge ID
+
+    Returns:
+        render_template: Render the writeup_editor.html template or redirects to the writeup.view_admin_writeup page
+    """
     if request.method == "GET":
         writeup = WriteupModel.query.filter_by(id=challenge_id).first()
         challenge = get_challenge_by_id(challenge_id)
@@ -90,6 +108,15 @@ def edit_writeup(challenge_id):
 @plugin_blueprint.route("/admin/writeup/delete/<int:challenge_id>", methods=["POST"])
 @admins_only
 def delete_writeup(challenge_id):
+    """
+    Delete the writeup for a challenge
+
+    Args:
+        challenge_id (int): The challenge ID
+
+    Returns:
+        dict: A JSON object containing the status of the deletion
+    """
     writeup = WriteupModel.query.filter_by(id=challenge_id).first_or_404()
     db.session.delete(writeup)
     db.session.commit()
@@ -105,7 +132,15 @@ def delete_writeup(challenge_id):
 @plugin_blueprint.route("/admin/writeup/visibility/<int:challenge_id>", methods=["PUT"])
 @admins_only
 def toogle_writeup_visibility(challenge_id):
-    
+    """
+    Toggle the visibility of a writeup
+
+    Args:
+        challenge_id (int): The challenge ID
+
+    Returns:
+        dict: A JSON object containing the status of the visibility change
+    """
     writeup = WriteupModel.query.filter_by(id=challenge_id).first_or_404()
     writeup.visible = not writeup.visible
 
@@ -121,6 +156,16 @@ def toogle_writeup_visibility(challenge_id):
 
 
 def challenge_is_unlocked(challenge_id):
+    """
+    Check if a challenge is unlocked for the current user
+
+    Args:
+        challenge_id (int): The challenge ID
+
+    Returns:
+        bool: Whether the challenge is unlocked or not
+    """
+
     user = get_current_user_attrs()
     team = get_current_team()
 
@@ -130,10 +175,34 @@ def challenge_is_unlocked(challenge_id):
         return db.session.query(Solves).filter(Solves.user_id == user.id, Solves.challenge_id == challenge_id).count()
 
 def get_writeup(challenge_id):
+    """
+    Get the writeup for a challenge
+
+    Args:
+        challenge_id (int): The challenge ID
+
+    Returns:
+        query result: The writeup for the challenge
+    """
     return db.session.query(Challenges, WriteupModel).outerjoin(WriteupModel, Challenges.id == WriteupModel.id).filter(Challenges.id == challenge_id, Challenges.state == "visible").first()
 
 def get_all_challenges():
+    """
+    Get all challenges
+
+    Returns:
+        query result: All challenges
+    """
     return Challenges.query.all()
 
 def get_challenge_by_id(challenge_id):
+    """
+    Get a challenge by its ID 
+
+    Args:
+        challenge_id (int): The challenge ID
+
+    Returns:
+        query result: The challenge
+    """
     return Challenges.query.filter_by(id=challenge_id).first_or_404()

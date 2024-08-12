@@ -10,6 +10,9 @@ directory_name = os.path.dirname(__file__).split(os.sep)[-1] # Get the directory
 
 
 def load(app):
+    """
+    Load the plugin into CTFd and registers the blueprint
+    """
 
     app.register_blueprint(plugin_blueprint)
 

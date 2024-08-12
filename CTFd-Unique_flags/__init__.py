@@ -19,6 +19,17 @@ class UniqueFlag(CTFdStaticFlag):
 
     @staticmethod
     def compare(chal_key_obj, provided_flag):
+        """
+        Compare the provided flag to the saved flag
+
+        Args:
+            chal_key_obj: A CTFd.models.Flags object
+            provided_flag: A string provided by the user
+
+
+        Returns:
+            bool: Whether or not the provided flag is correct
+        """
         # Get the actual flag to check for the challenge submitted (the function compare() is called for each flag of the challenge)
 
         saved_flag = chal_key_obj.content
@@ -26,29 +37,35 @@ class UniqueFlag(CTFdStaticFlag):
 
         if len(saved_flag) != len(provided_flag):
             return False
-        
+
         result = 0
-    
+
         for x, y in zip(saved_flag, provided_flag):
             result |= ord(x) ^ ord(y)
-        
 
-        if result == 0:
-            team_id = chal_key_obj.data
-            if int(team_id) == int(curr_team_id):
-                return True
-            else:
-                curr_user_id = get_current_user().id
-                cheater = CheaterTeams(challengeid=chal_key_obj.challenge_id, cheaterid=curr_user_id, cheatteamid=curr_team_id, sharerteamid=team_id, flagid=chal_key_obj.id)
-                db.session.add(cheater)
-                return False
-        else:
+        if result != 0:
             return False
+        
+        # Check if the team id of the player is the same as the team id of the flag data
+        # True = the flag is correct and the player is in the right team
+        # False = the flag is correct but the player is not in the right team
+        team_id = chal_key_obj.data
+        if int(team_id) == int(curr_team_id):
+            return True
+        
+        # The player is not in the right team, so we add the record in the cheater_teams table
+        curr_user_id = get_current_user().id
+        cheater = CheaterTeams(challengeid=chal_key_obj.challenge_id, cheaterid=curr_user_id, cheatteamid=curr_team_id, sharerteamid=team_id, flagid=chal_key_obj.id)
+        db.session.add(cheater)
+        return False
 
 
 
 def load(app):
-
+    """ 
+    Load the plugin into CTFd
+    Creates the database table and registers the blueprint
+    """
     app.db.create_all()
     app.register_blueprint(plugin_blueprint)
 

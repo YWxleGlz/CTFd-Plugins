@@ -1,10 +1,7 @@
 import functools
 from CTFd.utils import get_config
 from flask import abort
-
-import contextlib
-import os
-from flask import abort, redirect, render_template, request, url_for
+from flask import abort,  request
 from CTFd.utils.user import (
     authed,
     get_current_team,
@@ -12,41 +9,19 @@ from CTFd.utils.user import (
 )
 from CTFd.utils import config, get_config
 from CTFd.utils.logging import log
-from CTFd.models import db
-from flask import Blueprint
-from CTFd.utils.decorators import admins_only
 
-from CTFd.models import Teams, Flags, db
-from CTFd.models import (
-    ChallengeFiles,
-    Challenges,
-    Fails,
-    Flags,
-    Hints,
-    Solves,
-    Tags,
-    db,
-)
-from CTFd.utils.helpers import info_for, error_for
 from CTFd.utils import user as current_user
 from CTFd.utils.user import get_current_team, get_current_user
-from CTFd.utils import config, get_config, set_config
-from CTFd.utils.dates import ctf_ended, ctf_paused, ctftime
-from CTFd.plugins.challenges import CHALLENGE_CLASSES, get_chal_class
-from flask import render_template, Blueprint, request
-from CTFd.utils.decorators import admins_only
+from CTFd.utils import config, get_config
+from CTFd.utils.dates import ctf_paused, ctftime
+from flask import  request
 
-from CTFd.utils.helpers import get_errors, get_infos
-from .utils import add_fail, add_solves
-from CTFd.cache import (
-    cache,
-    clear_challenges,
-    clear_config,
-    clear_pages,
-    clear_standings,
-)
+
 
 def is_allowed_to_attempt(f):
+    """
+    Decorator to check if the user is allowed to submit a flag.
+    """
 
     @functools.wraps(f)
     def is_allowed_to_attempt_wrapper(*args, **kwargs):
@@ -55,18 +30,16 @@ def is_allowed_to_attempt(f):
         if authed() is False:
             return (
                     {"success": False, 
-                        "message": "Veuillez vous authentifier.", 
+                        "message": "You must be logged in to access to this feature.", 
                         "design": "neutral"
                     },
                 403,
             )
 
-
-
         if config.is_teams_mode() and get_current_team() is None:
             return (
                     {"success": False, 
-                        "message": "veuillez d'abord rejoindre une équipe.", 
+                        "message": "Please create or join a team to submit flags.", 
                         "design": "neutral"
                     },
                 403,

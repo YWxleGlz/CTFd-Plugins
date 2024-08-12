@@ -6,13 +6,31 @@ from CTFd.utils.helpers import get_errors, get_infos
 from CTFd.models import Teams, Flags, db
 
 def getTeamID(classe, groupe):
+    """
+    Get the ID of a team from its class and group
+
+    Args:
+        classe (string)
+        groupe (string)
+
+    Returns:
+        int: The ID of the team
+    """
     team_name = f"Team-{classe.upper()}-{int(groupe):02}"
     result =  Teams.query.filter_by(name=team_name).first()
     return "Error" if result is None else result.id
 
 
 def importFlag(csv_content):
+    """
+    Import flags from a CSV file into the database
 
+    Args:
+        csv_content (string): The content of the CSV file (Check assets/example.csv) to see the format
+
+    Returns:
+        A list of infos and a list of errors
+    """
     infos = get_infos()
     errors = get_errors()
 
@@ -23,7 +41,7 @@ def importFlag(csv_content):
         errors.append("You need at least the columns 'CLASS', 'GROUP', 'FLAG', 'CHALLENGE_ID'.")
         return infos, errors
     
-    previous_team = "" # Cette variable permet de ne pas demander plusieurs fois à la base de données l'ID de l'équipe si la classe et le groupe n'ont pas changé.
+    previous_team = "" # This variable is used to avoid multiple queries to the database
 
     flags = []
     for row in csvreader:

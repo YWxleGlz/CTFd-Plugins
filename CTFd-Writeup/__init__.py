@@ -4,6 +4,11 @@ from CTFd.utils.plugins import override_template
 from CTFd.utils import config, get_config, set_config
 
 def load(app):
+    """
+    Load the plugin into CTFd, registers the blueprint and creates the database table
+    Overrides the challenge.html template if the plugin is enabled
+    """
+
     app.db.create_all() 
     app.register_blueprint(plugin_blueprint)
     dir_path = Path(__file__).parent.resolve()

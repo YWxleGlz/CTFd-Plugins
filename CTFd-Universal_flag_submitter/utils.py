@@ -9,10 +9,12 @@ from CTFd.utils.user import get_current_user
 
 def add_submission(submission_type, challenge_id, request):
     """
-    Générique pour ajouter une soumission de fail ou solve.
-    submission_type: 'fail' ou 'solve' pour déterminer le type de soumission.
-    challenge_id: ID du challenge concerné.
-    request: objet de requête Flask. 
+    Generic function to add a submission to the database
+
+    Args:
+        submission_type (string): The type of submission to add
+        challenge_id (int): The ID of the challenge
+        request: The request object
     """
 
     # Récupérer l'utilisateur

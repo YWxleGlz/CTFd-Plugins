@@ -15,6 +15,11 @@ plugin_blueprint = Blueprint("unique_flags", __name__, template_folder="template
 @plugin_blueprint.route("/admin/unique-flag", methods=["GET", "POST"])
 @admins_only
 def home():
+    """ Import unique flags or show the unique flags administration page
+
+    Returns:
+        render_template: Render the admin-import.html template or redirects to the unique_flags.home page
+    """
     infos = get_infos()
     errors = get_errors()
 
@@ -38,6 +43,11 @@ def home():
 @plugin_blueprint.route("/admin/unique-flag/delete-flags", methods=["POST"])
 @admins_only
 def delete_flags():
+    """ Deletes all unique flags or flags of a specific challenge
+
+    Returns:
+        redirection: Redirects to the unique_flags.home page
+    """
     if request.form.get('challenge_id') is None:
         count = Flags.query.filter_by(type="uniqueflag").delete()
     else: 
@@ -53,4 +63,9 @@ def delete_flags():
 @plugin_blueprint.route("/admin/unique-flag/cheating-monitor", methods=["GET"])
 @admins_only
 def view_cheater():
+    """ View the cheater teams
+
+    Returns:
+        render_template: Render the cheat-monitor.html template
+    """
     return render_template('cheat-monitor.html', cheaters=CheaterTeams.query.all())
